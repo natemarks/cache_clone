@@ -1,0 +1,11 @@
+build/
+upload/
+vendor/
+.idea/
+.vscode/
+*.test
+*.out
+*.iml
+.venv/
+_integration_test_data.sh
+test_data.json
