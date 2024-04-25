@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// GetRemoteCredentialsInput required input for GetRemoteCredentials
 type GetRemoteCredentialsInput struct {
 	// The AWS SecretManager secret identifier. ex: /path/to/y/secret
 	AWSSMSecretID string
@@ -37,6 +38,7 @@ type GetRemoteCredentialsOutput struct {
 	TokenSha256sum string
 }
 
+// Sha256sum return sh256sum of a string
 func Sha256sum(s string) string {
 	sum := sha256.Sum256([]byte(s))
 	return fmt.Sprintf("%x", sum)
@@ -45,11 +47,11 @@ func Sha256sum(s string) string {
 // GetRemoteCredentials returns the remote credentials and sha256sums
 func GetRemoteCredentials(i GetRemoteCredentialsInput, log *zerolog.Logger) (GetRemoteCredentialsOutput, error) {
 
-	// Setup the client
+	// Set up the client
 	log.Info().Msg("setting up the AWS Secret Manager client")
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 
 	SecretClient := *secretsmanager.NewFromConfig(cfg)
@@ -64,7 +66,7 @@ func GetRemoteCredentials(i GetRemoteCredentialsInput, log *zerolog.Logger) (Get
 	log.Info().Msg("getting the secret doc from AWS SM")
 	secretDoc, err := SecretClient.GetSecretValue(context.TODO(), SecretInput)
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 
 	// unmarshal the JSON secret doc into a map. If the structure isn't a map this will fail
@@ -72,7 +74,7 @@ func GetRemoteCredentials(i GetRemoteCredentialsInput, log *zerolog.Logger) (Get
 	var objmap map[string]string
 	err = json.Unmarshal([]byte(*secretDoc.SecretString), &objmap)
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	// Use the provided username and token key names to get the credential values
 	username := objmap[i.UsernameKey]

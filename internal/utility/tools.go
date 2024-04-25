@@ -14,15 +14,15 @@ import (
 	"time"
 )
 
-// Return true if the directory exists
+// DirExists return true if the directory exists
 func DirExists(dir string) bool {
 	_, err := os.Stat(dir)
 	return err == nil
 }
 
-// UrlHostAndPath given a url return the host and path
+// URLHostAndPath given a url return the host and path
 //  Throw an error if either required value is empty
-func UrlHostAndPath(urlString string) (host string, path string, err error) {
+func URLHostAndPath(urlString string) (host string, path string, err error) {
 	u, err := url.Parse(urlString)
 	if err != nil {
 		return "", "", err
@@ -53,15 +53,20 @@ func MakeParentDir(p string) (parentDir string, err error) {
 	return parent, err
 }
 
+// Result is the return from a shell command
 type Result struct {
 	ReturnCode int
 	StdOut     string
 	StdErr     string
 }
 
+func (r Result) String() string {
+	return fmt.Sprintf("Return Code: %d StdOut: %s StdErr: %s", r.ReturnCode, r.StdOut, r.StdErr)
+}
+
 func checkErr(e error) {
 	if e != nil {
-		log.Fatal().Err(e)
+		log.Fatal().Err(e).Msg(e.Error())
 	}
 
 }

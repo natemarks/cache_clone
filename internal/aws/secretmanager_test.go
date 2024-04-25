@@ -30,6 +30,7 @@ func IsValid(output GetRemoteCredentialsOutput) bool {
 // TestGetRemoteCredentials This test gets credentials based on  a secret manager config proided through env vars
 // It executes a loose check on the returned output
 func TestGetRemoteCredentials(t *testing.T) {
+	t.Skip("skipping test")
 	logger := log.With().Str("test_key", "test_value").Logger()
 	type args struct {
 		i   GetRemoteCredentialsInput

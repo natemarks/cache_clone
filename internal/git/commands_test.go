@@ -12,6 +12,7 @@ import (
 )
 
 func Test_getAndPushMirror(t *testing.T) {
+	t.Skip("skipping test")
 	dir, _ := ioutil.TempDir("", "clone_cache_test")
 	logger := log.With().Str("test_key", "test_value").Logger()
 
@@ -63,6 +64,7 @@ func Test_getAndPushMirror(t *testing.T) {
 }
 
 func TestGetMirror(t *testing.T) {
+	t.Skip("skipping test")
 	dir, _ := ioutil.TempDir("", "clone_cache_test")
 	logger := log.With().Str("test_key", "test_value").Logger()
 

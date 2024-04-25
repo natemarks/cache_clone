@@ -3,8 +3,8 @@ package cmd
 
 import (
 	"fmt"
-	ver "github.com/natemarks/cache_clone/version"
 	"github.com/mitchellh/go-homedir"
+	ver "github.com/natemarks/cache_clone/version"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -61,32 +61,32 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&mirror, "mirror", "", "Location for all mirror repos")
 	err := rootCmd.MarkPersistentFlagRequired("mirror")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentFlags().StringVar(&local, "local", "", "Location to create the repo clone")
 	err = rootCmd.MarkPersistentFlagRequired("local")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentFlags().StringVar(&remote, "remote", "", "git remote server url. example: https://my.git.com/my/project.git")
 	err = rootCmd.MarkPersistentFlagRequired("remote")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentFlags().StringVar(&secretID, "secretID", "", "AWS Secret Manager secretID path")
 	err = rootCmd.MarkPersistentFlagRequired("secretID")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentFlags().StringVar(&userKey, "userKey", "", "username key in the secret JSON dict")
 	err = rootCmd.MarkPersistentFlagRequired("userKey")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentFlags().StringVar(&tokenKey, "tokenKey", "", "token key in the secret JSON dict")
 	err = rootCmd.MarkPersistentFlagRequired("tokenKey")
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
 	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)

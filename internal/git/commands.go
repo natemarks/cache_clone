@@ -21,15 +21,15 @@ import (
 // so the user (build job?) knows where to find project files
 func GetMirror(remote string, mirror string, local string, remoteUsername string, remoteToken string, log *zerolog.Logger) error {
 	// create the mirror path mirror
-	remoteHost, remotePath, err := utility.UrlHostAndPath(remote)
+	remoteHost, remotePath, err := utility.URLHostAndPath(remote)
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
-	remoteUrl, err := url.Parse(remote)
+	remoteURL, err := url.Parse(remote)
 	if err != nil {
 		return err
 	}
-	remoteUrl.User = url.UserPassword(remoteUsername, remoteToken)
+	remoteURL.User = url.UserPassword(remoteUsername, remoteToken)
 	mirrorDir := path.Join(mirror, remoteHost, remotePath)
 	mirrorParent, err := utility.MakeParentDir(mirrorDir)
 	log.Debug().Msgf("Ensuring mirror parent path: %s", mirrorParent)
@@ -41,20 +41,16 @@ func GetMirror(remote string, mirror string, local string, remoteUsername string
 	if result.ReturnCode != 0 || result.StdOut != "true\n" {
 		//The local mirror doesn't exist and needs to be cloned
 		log.Debug().Msgf("Cloning mirror to : %s", mirrorDir)
-		result, err = utility.Run([]string{"git", "-C", mirrorParent, "clone", "--mirror", fmt.Sprint(remoteUrl)})
+		result, err = utility.Run([]string{"git", "-C", mirrorParent, "clone", "--mirror", fmt.Sprint(remoteURL)})
 		if err != nil {
-			log.With().Str("errorlevel",
-				fmt.Sprint(result.ReturnCode)).Str("stdout", result.StdOut).Str("stderr", result.StdErr)
-			log.Fatal().Err(err)
+			log.Fatal().Err(err).Msg(result.String())
 		}
 	} else {
 		//The local mirror does  exist and needs to be pulled
 		log.Debug().Msgf("Mirror exists at : %s. Pulling latest", mirrorDir)
 		result, err = utility.Run([]string{"git", "-C", mirrorDir, "fetch", "--all"})
 		if err != nil {
-			log.With().Str("errorlevel",
-				fmt.Sprint(result.ReturnCode)).Str("stdout", result.StdOut).Str("stderr", result.StdErr)
-			log.Fatal().Err(err)
+			log.Fatal().Err(err).Msg(result.String())
 		}
 	}
 	// The mirror is all set , no create the local repo form the local mirror
@@ -69,9 +65,7 @@ func GetMirror(remote string, mirror string, local string, remoteUsername string
 	result, err = utility.Run([]string{"git", "clone", mirrorDir, local})
 	log.Debug().Msgf("Creating local clone(%s) from mirror(%s)", local, mirrorDir)
 	if err != nil {
-		log.With().Str("errorlevel",
-			fmt.Sprint(result.ReturnCode)).Str("stdout", result.StdOut).Str("stderr", result.StdErr)
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(result.String())
 	}
 
 	return err
@@ -80,27 +74,27 @@ func GetMirror(remote string, mirror string, local string, remoteUsername string
 // PushMirror pushes the local repo to the local mirror, then the mirror to the remote
 func PushMirror(remote string, mirror string, local string, remoteUsername string, remoteToken string, log *zerolog.Logger) error {
 	// create the mirror path mirror
-	remoteHost, remotePath, err := utility.UrlHostAndPath(remote)
+	remoteHost, remotePath, err := utility.URLHostAndPath(remote)
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(err.Error())
 	}
-	remoteUrl, err := url.Parse(remote)
+	remoteURL, err := url.Parse(remote)
 	if err != nil {
 		return err
 	}
-	remoteUrl.User = url.UserPassword(remoteUsername, remoteToken)
+	remoteURL.User = url.UserPassword(remoteUsername, remoteToken)
 	mirrorDir := path.Join(mirror, remoteHost, remotePath)
 	// Check the status of the local repo before trying to push
 	log.Info().Msgf("Checking status of local repo: %s", local)
 	result, _ := utility.Run([]string{"git", "-C", local, "status", "--short"})
 	if err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(result.String())
 	}
 	// git status --short stdout will be empty if the repo is clean
 	if result.StdOut != "" {
 		msg := fmt.Sprintf("Unable to push dirty repo: %s", local)
 		err := errors.New(msg)
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(result.String())
 	}
 	// Get the current branch name so we can push it
 	log.Info().Msgf("Get current branch of local repo: %s", local)
@@ -114,7 +108,7 @@ func PushMirror(remote string, mirror string, local string, remoteUsername strin
 	if result.ReturnCode != 0 {
 		msg := fmt.Sprintf("Unable to local repo (%s) to mirror (%s)", local, mirrorDir)
 		err = errors.New(msg)
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(result.String())
 	}
 	// Push the mirro to the remote
 	log.Info().Msgf("Pushing mirror(%s) to remote(%s)", mirrorDir, remote)
@@ -122,7 +116,7 @@ func PushMirror(remote string, mirror string, local string, remoteUsername strin
 	if result.ReturnCode != 0 {
 		msg := fmt.Sprintf("Unable to push mirror (%s) to remote (%s)", mirrorDir, remote)
 		err = errors.New(msg)
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg(result.String())
 	}
 	return nil
 }
