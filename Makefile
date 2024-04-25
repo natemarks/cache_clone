@@ -27,11 +27,11 @@ clean-venv: ## re-create virtual env
 build: ## build the binaries with commit IDs
 	mkdir -p build/$(COMMIT)/linux/amd64
 	env GOOS=linux GOARCH=amd64 \
-	go build  -v -o build/$(COMMIT)/linux/amd64/${OUT} \
+	go build  -v -o build/$(COMMIT)/linux/amd64/${OUT}_linux_amd64 \
 	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${COMMIT}" ${PKG}
 	mkdir -p build/$(COMMIT)/darwin/amd64
 	env GOOS=darwin GOARCH=amd64 \
-	go build  -v -o build/$(COMMIT)/darwin/amd64/${OUT} \
+	go build  -v -o build/$(COMMIT)/darwin/amd64/${OUT}_darwin_amd64 \
 	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${COMMIT}" ${PKG}
 
 release:  ## Build release versions
