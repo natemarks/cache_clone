@@ -5,7 +5,6 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"github.com/natemarks/cache_clone/config"
 	"os"
 
@@ -71,5 +70,4 @@ func init() {
 	settings.Local = local
 	settings.Remote = remote
 	settings.Verbose = verbose
-	fmt.Sprint(settings)
 }

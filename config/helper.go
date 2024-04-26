@@ -3,6 +3,7 @@ package config
 // helper functions
 import (
 	"os"
+	"strconv"
 
 	"github.com/natemarks/cache_clone/version"
 	"github.com/rs/zerolog"
@@ -16,6 +17,10 @@ type Settings struct {
 	Mirror   string
 	Local    string
 	Remote   string
+}
+
+func (s Settings) String() string {
+	return "Settings{Verbose: " + strconv.FormatBool(s.Verbose) + ", SecretID: " + s.SecretID + ", UserKey: " + s.UserKey + ", TokenKey: " + s.TokenKey + ", Mirror: " + s.Mirror + ", Local: " + s.Local + ", Remote: " + s.Remote + "}"
 }
 
 // GetLogger returns a logger for the application

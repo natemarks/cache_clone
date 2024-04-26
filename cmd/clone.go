@@ -18,7 +18,7 @@ var cloneCmd = &cobra.Command{
                      Clone using the local mirror`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log := config.GetLogger(settings)
-		log.Info().Msg("Starting...")
+		log.Info().Msg(settings.String())
 	},
 }
 
