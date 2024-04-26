@@ -44,7 +44,7 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.PersistentFlags().BoolVarP(&Verbose, "Verbose", "v", false, "Enable Verbose/debug logging")
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "enable verbose/debug logging")
 
 	rootCmd.PersistentFlags().StringVarP(&mirror, "mirror", "m", "", "Location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
