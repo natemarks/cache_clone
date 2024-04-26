@@ -17,7 +17,7 @@ var cloneCmd = &cobra.Command{
                      Create or update a local mirror of the repo.
                      Clone using the local mirror`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log := config.GetLogger(settings)
+		log := config.GetLogger(verbose, settings)
 		log.Info().Msg(settings.String())
 	},
 }
