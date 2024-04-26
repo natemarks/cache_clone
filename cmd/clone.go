@@ -1,41 +1,40 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+
+*/
 package cmd
 
 import (
-	"github.com/natemarks/cache_clone/internal/aws"
-	"github.com/natemarks/cache_clone/internal/git"
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(cloneCmd)
-}
-
+// cloneCmd represents the clone command
 var cloneCmd = &cobra.Command{
 	Use:   "clone",
-	Short: "CLone a remote repo to a local directory using a local mirror",
-	Long: `Access the stash credentials from AWS Secret Manager. 
-                     Create or update a local mirror of the repo.
-                     Clone using the local mirror`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// set up the logger
-		logger := log.With().Str("SecretID", secretID).Logger()
-		logger = logger.With().Str("userKey", userKey).Logger()
-		logger = logger.With().Str("tokenKey", tokenKey).Logger()
-		logger = logger.With().Str("mirror", mirror).Logger()
-		logger = logger.With().Str("local", local).Logger()
-		logger = logger.With().Str("remote", remote).Logger()
-		// Get credentials from AWS Secret Manager
-		creds, err := aws.GetRemoteCredentials(aws.GetRemoteCredentialsInput{
-			AWSSMSecretID: secretID,
-			UsernameKey:   userKey,
-			TokenKey:      tokenKey,
-		}, &logger)
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
 
-		logger.Info().Msg("Try to Clone Repo")
-		err = git.GetMirror(remote, mirror, local, creds.Username, creds.Token, &logger)
-		if err != nil {
-			logger.Fatal().Err(err)
-		}
-		logger.Info().Msg("Successfully cloned the repo")
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("clone called")
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(cloneCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// cloneCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// cloneCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

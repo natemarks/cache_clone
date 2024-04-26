@@ -1,14 +1,15 @@
-package cmd
+package old
 
 import (
 	"fmt"
+	"github.com/natemarks/cache_clone/cmd"
 
 	ver "github.com/natemarks/cache_clone/version"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	cmd.rootCmd.AddCommand(versionCmd)
 }
 
 var versionCmd = &cobra.Command{

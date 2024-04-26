@@ -11,6 +11,8 @@ require (
 	github.com/go-git/go-git/v5 v5.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/rs/zerolog v1.21.0
-	github.com/spf13/cobra v1.1.3
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.7.0
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
