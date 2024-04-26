@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var verbose bool
+var Verbose bool
 var mirror, local, remote, secretID, userKey, tokenKey string
 var settings config.Settings
 
@@ -44,7 +44,7 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose/debug logging")
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "Verbose", "v", false, "Enable Verbose/debug logging")
 
 	rootCmd.PersistentFlags().StringVarP(&mirror, "mirror", "m", "", "Location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
@@ -69,5 +69,5 @@ func init() {
 	settings.Mirror = mirror
 	settings.Local = local
 	settings.Remote = remote
-	settings.Verbose = verbose
+	settings.Verbose = Verbose
 }
