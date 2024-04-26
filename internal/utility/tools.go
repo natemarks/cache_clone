@@ -21,7 +21,8 @@ func DirExists(dir string) bool {
 }
 
 // URLHostAndPath given a url return the host and path
-//  Throw an error if either required value is empty
+//
+//	Throw an error if either required value is empty
 func URLHostAndPath(urlString string) (host string, path string, err error) {
 	u, err := url.Parse(urlString)
 	if err != nil {
@@ -64,13 +65,6 @@ func (r Result) String() string {
 	return fmt.Sprintf("Return Code: %d StdOut: %s StdErr: %s", r.ReturnCode, r.StdOut, r.StdErr)
 }
 
-func checkErr(e error) {
-	if e != nil {
-		log.Fatal().Err(e).Msg(e.Error())
-	}
-
-}
-
 // Run Runs a shell command and waits to return the results
 func Run(c []string) (result Result, err error) {
 	var args []string
@@ -78,12 +72,20 @@ func Run(c []string) (result Result, err error) {
 	args = append(args, c[1:]...)
 	cmd := exec.Command(baseCommand, args...)
 	outPipe, err := cmd.StdoutPipe()
-	checkErr(err)
+	if err != nil {
+		log.Error().Err(err).Msg("Error creating stdout pipe")
+		return Result{}, err
+	}
 	errPipe, err := cmd.StderrPipe()
-	checkErr(err)
+	if err != nil {
+		log.Error().Err(err).Msg("Error creating stderr pipe")
+		return Result{}, err
+	}
 	err = cmd.Start()
-	checkErr(err)
-
+	if err != nil {
+		log.Error().Err(err).Msg("Error starting command")
+		return Result{}, err
+	}
 	oBuf := new(bytes.Buffer)
 	_, err = oBuf.ReadFrom(outPipe)
 	if err != nil {
@@ -99,8 +101,6 @@ func Run(c []string) (result Result, err error) {
 	stderr := eBuf.String()
 
 	err = cmd.Wait()
-	checkErr(err)
-
 	return Result{cmd.ProcessState.ExitCode(), stdout, stderr}, err
 
 }
