@@ -1,6 +1,6 @@
 module github.com/natemarks/cache_clone
 
-go 1.15
+go 1.21.9
 
 require (
 	github.com/aws/aws-sdk-go v1.38.13
