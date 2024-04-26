@@ -24,7 +24,7 @@ func (s Settings) String() string {
 }
 
 // GetLogger returns a logger for the application
-func GetLogger(verbose bool, s Settings) (log zerolog.Logger) {
+func GetLogger(verbose bool) (log zerolog.Logger) {
 	log = zerolog.New(os.Stdout).With().Str("version", version.Version).Timestamp().Logger()
 	log = log.Level(zerolog.InfoLevel)
 	//log = log.With().Str("SecretID", s.SecretID).Logger()
