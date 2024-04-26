@@ -5,9 +5,9 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"os"
-
+	"github.com/natemarks/cache_clone/config"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var verbose bool
@@ -15,7 +15,7 @@ var mirror string
 
 //var mirror, local, remote, secretID, userKey, tokenKey string
 
-//var settings config.Settings
+var settings config.Settings
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -46,9 +46,9 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "enable verbose/debug logging")
+	rootCmd.PersistentFlags().BoolVarP(&settings.Verbose, "verbose", "v", false, "enable verbose/debug logging")
 
-	rootCmd.PersistentFlags().StringVarP(&mirror, "mirror", "m", "", "Location for all mirror repos")
+	rootCmd.PersistentFlags().StringVarP(&settings.Mirror, "mirror", "m", "", "Location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
 
 	//rootCmd.PersistentFlags().StringVarP(&local, "local", "l", "", "Location to create the repo clone")
