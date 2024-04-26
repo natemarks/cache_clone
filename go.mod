@@ -4,15 +4,20 @@ go 1.21.9
 
 require (
 	github.com/aws/aws-sdk-go v1.38.13
-	github.com/aws/aws-sdk-go-v2 v1.3.1
 	github.com/aws/aws-sdk-go-v2/config v1.1.4
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.2.1
-	github.com/go-git/go-git/v5 v5.3.0
-	github.com/mitchellh/go-homedir v1.1.0
 	github.com/rs/zerolog v1.21.0
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.7.0
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+require (
+	github.com/aws/aws-sdk-go-v2 v1.3.1 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.1.4 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.0.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.0.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.1.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.2.1 // indirect
+	github.com/aws/smithy-go v1.3.0 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 )
