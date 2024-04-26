@@ -5,15 +5,17 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/natemarks/cache_clone/config"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 var verbose bool
-var mirror, local, remote, secretID, userKey, tokenKey string
-var settings config.Settings
+var mirror string
+
+//var mirror, local, remote, secretID, userKey, tokenKey string
+
+//var settings config.Settings
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -49,25 +51,25 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&mirror, "mirror", "m", "", "Location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
 
-	rootCmd.PersistentFlags().StringVarP(&local, "local", "l", "", "Location to create the repo clone")
-	rootCmd.MarkFlagRequired("local")
-
-	rootCmd.PersistentFlags().StringVarP(&remote, "remote", "r", "", "git remote server url. example: https://my.git.com/my/project.git")
-	rootCmd.MarkFlagRequired("remote")
-
-	rootCmd.PersistentFlags().StringVarP(&secretID, "secretID", "s", "", "AWS Secret Manager secretID path")
-	rootCmd.MarkFlagRequired("secretID")
-
-	rootCmd.PersistentFlags().StringVarP(&userKey, "userKey", "u", "", "username key in the secret JSON dict")
-	rootCmd.MarkFlagRequired("userKey")
-
-	rootCmd.PersistentFlags().StringVarP(&tokenKey, "tokenKey", "t", "", "token key in the secret JSON dict")
-	rootCmd.MarkFlagRequired("tokenKey")
-	settings.SecretID = secretID
-	settings.UserKey = userKey
-	settings.TokenKey = tokenKey
-	settings.Mirror = mirror
-	settings.Local = local
-	settings.Remote = remote
-	settings.Verbose = verbose
+	//rootCmd.PersistentFlags().StringVarP(&local, "local", "l", "", "Location to create the repo clone")
+	//rootCmd.MarkFlagRequired("local")
+	//
+	//rootCmd.PersistentFlags().StringVarP(&remote, "remote", "r", "", "git remote server url. example: https://my.git.com/my/project.git")
+	//rootCmd.MarkFlagRequired("remote")
+	//
+	//rootCmd.PersistentFlags().StringVarP(&secretID, "secretID", "s", "", "AWS Secret Manager secretID path")
+	//rootCmd.MarkFlagRequired("secretID")
+	//
+	//rootCmd.PersistentFlags().StringVarP(&userKey, "userKey", "u", "", "username key in the secret JSON dict")
+	//rootCmd.MarkFlagRequired("userKey")
+	//
+	//rootCmd.PersistentFlags().StringVarP(&tokenKey, "tokenKey", "t", "", "token key in the secret JSON dict")
+	//rootCmd.MarkFlagRequired("tokenKey")
+	//settings.SecretID = secretID
+	//settings.UserKey = userKey
+	//settings.TokenKey = tokenKey
+	//settings.Mirror = mirror
+	//settings.Local = local
+	//settings.Remote = remote
+	//settings.Verbose = verbose
 }
