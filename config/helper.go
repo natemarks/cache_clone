@@ -33,8 +33,8 @@ func GetLogger(s Settings) (log zerolog.Logger) {
 	log = log.With().Str("remote", s.Remote).Logger()
 	if s.Verbose {
 		log = log.Level(zerolog.DebugLevel)
-		//log = log.With().Str("userKey", s.UserKey).Logger()
-		//log = log.With().Str("tokenKey", s.TokenKey).Logger()
+		log = log.With().Str("userKey", s.UserKey).Logger()
+		log = log.With().Str("tokenKey", s.TokenKey).Logger()
 		log.Debug().Msg("debug logging enabled")
 	}
 	return log

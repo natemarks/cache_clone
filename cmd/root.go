@@ -42,8 +42,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cache_clone.yaml)")
-
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.PersistentFlags().BoolVarP(&settings.Verbose, "verbose", "v", false, "enable verbose/debug logging")
@@ -51,25 +49,19 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&settings.Mirror, "mirror", "m", "", "Location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
 
-	//rootCmd.PersistentFlags().StringVarP(&local, "local", "l", "", "Location to create the repo clone")
-	//rootCmd.MarkFlagRequired("local")
-	//
-	//rootCmd.PersistentFlags().StringVarP(&remote, "remote", "r", "", "git remote server url. example: https://my.git.com/my/project.git")
-	//rootCmd.MarkFlagRequired("remote")
-	//
-	//rootCmd.PersistentFlags().StringVarP(&secretID, "secretID", "s", "", "AWS Secret Manager secretID path")
-	//rootCmd.MarkFlagRequired("secretID")
-	//
-	//rootCmd.PersistentFlags().StringVarP(&userKey, "userKey", "u", "", "username key in the secret JSON dict")
-	//rootCmd.MarkFlagRequired("userKey")
-	//
-	//rootCmd.PersistentFlags().StringVarP(&tokenKey, "tokenKey", "t", "", "token key in the secret JSON dict")
-	//rootCmd.MarkFlagRequired("tokenKey")
-	//settings.SecretID = secretID
-	//settings.UserKey = userKey
-	//settings.TokenKey = tokenKey
-	//settings.Mirror = mirror
-	//settings.Local = local
-	//settings.Remote = remote
-	//settings.Verbose = verbose
+	rootCmd.PersistentFlags().StringVarP(&settings.Local, "local", "l", "", "Location to create the repo clone")
+	rootCmd.MarkFlagRequired("local")
+
+	rootCmd.PersistentFlags().StringVarP(&settings.Remote, "remote", "r", "", "git remote server url. example: https://my.git.com/my/project.git")
+	rootCmd.MarkFlagRequired("remote")
+
+	rootCmd.PersistentFlags().StringVarP(&settings.SecretID, "secretID", "s", "", "AWS Secret Manager secretID path")
+	rootCmd.MarkFlagRequired("secretID")
+
+	rootCmd.PersistentFlags().StringVarP(&settings.UserKey, "userKey", "u", "", "username key in the secret JSON dict")
+	rootCmd.MarkFlagRequired("userKey")
+
+	rootCmd.PersistentFlags().StringVarP(&settings.TokenKey, "tokenKey", "t", "", "token key in the secret JSON dict")
+	rootCmd.MarkFlagRequired("tokenKey")
+
 }
