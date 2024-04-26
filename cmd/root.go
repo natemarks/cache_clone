@@ -5,23 +5,22 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"github.com/natemarks/cache_clone/config"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
-
+var verbose bool
+var mirror, local, remote, secretID, userKey, tokenKey string
+var settings config.Settings
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cache_clone",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Clone a repo using a local mirror",
+	Long: `Using credentials stored in AWS Secret Manager, create/update a local mirror.
+Then use the local mirror to create local clone`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -45,7 +44,30 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose/debug logging")
+
+	rootCmd.PersistentFlags().StringVarP(&mirror, "mirror", "m", "", "Location for all mirror repos")
+	rootCmd.MarkFlagRequired("mirror")
+
+	rootCmd.PersistentFlags().StringVarP(&local, "local", "l", "", "Location to create the repo clone")
+	rootCmd.MarkFlagRequired("local")
+
+	rootCmd.PersistentFlags().StringVarP(&remote, "remote", "r", "", "git remote server url. example: https://my.git.com/my/project.git")
+	rootCmd.MarkFlagRequired("remote")
+
+	rootCmd.PersistentFlags().StringVarP(&secretID, "secretID", "s", "", "AWS Secret Manager secretID path")
+	rootCmd.MarkFlagRequired("secretID")
+
+	rootCmd.PersistentFlags().StringVarP(&userKey, "userKey", "u", "", "username key in the secret JSON dict")
+	rootCmd.MarkFlagRequired("userKey")
+
+	rootCmd.PersistentFlags().StringVarP(&tokenKey, "tokenKey", "t", "", "token key in the secret JSON dict")
+	rootCmd.MarkFlagRequired("tokenKey")
+	settings.SecretID = secretID
+	settings.UserKey = userKey
+	settings.TokenKey = tokenKey
+	settings.Mirror = mirror
+	settings.Local = local
+	settings.Remote = remote
+	settings.Verbose = verbose
 }
-
-

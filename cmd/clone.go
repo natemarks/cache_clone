@@ -5,23 +5,20 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/natemarks/cache_clone/config"
 	"github.com/spf13/cobra"
 )
 
 // cloneCmd represents the clone command
 var cloneCmd = &cobra.Command{
 	Use:   "clone",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "CLone a remote repo to a local directory using a local mirror",
+	Long: `Access the stash credentials from AWS Secret Manager. 
+                     Create or update a local mirror of the repo.
+                     Clone using the local mirror`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("clone called")
+		log := config.GetLogger(settings)
+		log.Info().Msg("Starting...")
 	},
 }
 
