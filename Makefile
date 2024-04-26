@@ -2,77 +2,100 @@
 
 # Determine this makefile's path.
 # Be sure to place this BEFORE `include` directives, if any.
+SHELL := $(shell which bash)
+DEFAULT_BRANCH := main
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-OUT := cache_clone
 PKG := github.com/natemarks/cache_clone
-VERSION := 0.0.7
-COMMIT := $(shell git describe --always --long --dirty)
+COMMIT := $(shell git rev-parse HEAD)
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/)
+CDIR = $(shell pwd)
+EXECUTABLES := cache_clone
+GOOS := linux
+GOARCH := amd64
 
+CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+DEFAULT_BRANCH := main
 
 help: ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-all: run
+${EXECUTABLES}:
+	@for o in $(GOOS); do \
+	  for a in $(GOARCH); do \
+        echo "$(COMMIT)/$${o}/$${a}" ; \
+        mkdir -p build/$(COMMIT)/$${o}/$${a} ; \
+        echo "COMMIT: $(COMMIT)" >> build/$(COMMIT)/$${o}/$${a}/version.txt ; \
+        env GOOS=$${o} GOARCH=$${a} \
+        go build  -v -o build/$(COMMIT)/$${o}/$${a}/$@ \
+				-ldflags="-X github.com/natemarks/cache_clone/version.Version=${COMMIT}" ${PKG}; \
+	  done \
+    done ; \
 
-clean-venv: ## re-create virtual env
-	rm -rf .venv
-	python3 -m venv .venv
-	( \
-       source .venv/bin/activate; \
-       pip install --upgrade pip setuptools; \
-    )
+build: git-status ${EXECUTABLES}
+	rm -rf build/current
+	cp -R $(CDIR)/build/$(COMMIT) $(CDIR)/build/current
 
-build: ## build the binaries with commit IDs
-	env GOOS=linux GOARCH=amd64 \
-	go build  -v -o build/$(COMMIT)/${OUT}_linux_amd64 \
-	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${COMMIT}" ${PKG}
-	env GOOS=darwin GOARCH=amd64 \
-	go build  -v -o build/$(COMMIT)/${OUT}_darwin_amd64 \
-	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${COMMIT}" ${PKG}
+release: git-status build
+	mkdir -p release/$(COMMIT)
+	@for o in $(GOOS); do \
+	  for a in $(GOARCH); do \
+	    cp -R scripts ./build/$(COMMIT)/$${o}/$${a} ; \
+        tar -C ./build/$(COMMIT)/$${o}/$${a} -czvf release/$(COMMIT)/cache_clone_$(COMMIT)_$${o}_$${a}.tar.gz . ; \
+	  done \
+    done ; \
 
-release:  ## Build release versions
-	mkdir -p build/$(VERSION)/linux/amd64
-	env GOOS=linux GOARCH=amd64 \
-	go build  -v -o build/$(VERSION)/linux/amd64/${OUT} \
-	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${VERSION}" ${PKG}
-	mkdir -p build/$(VERSION)/darwin/amd64
-	env GOOS=darwin GOARCH=amd64 \
-	go build  -v -o build/$(VERSION)/darwin/amd64/${OUT} \
-	-ldflags="-X github.com/natemarks/cache_clone/version.Version=${VERSION}" ${PKG}
 
 test:
-	@go test -short ${PKG_LIST}
+	@go test -v ${PKG_LIST}
+#	@go test -short ${PKG_LIST}
 
 vet:
 	@go vet ${PKG_LIST}
 
-lint:
+goimports: ## check imports
+	go install golang.org/x/tools/cmd/goimports@latest
+	goimports -w .
+
+lint:  ##  run golint
+	go install golang.org/x/lint/golint@latest
 	@for file in ${GO_FILES} ;  do \
 		golint $$file ; \
 	done
 
-static: vet lint test
+fmt: ## run gofmt
+	@go fmt ${PKG_LIST}
 
-run: server
-	./${OUT}
+gocyclo: # run cyclomatic complexity check
+	go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+	gocyclo -over 25 .
+
+
+godeadcode: # run cyclomatic complexity check
+	go install golang.org/x/tools/cmd/deadcode@latest
+	deadcode -test github.com/natemarks/cache_clone/...
+
+govulncheck: # run cyclomatic complexity check
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck ./...
+
+static: goimports fmt vet lint gocyclo godeadcode govulncheck test
 
 clean:
 	-@rm ${OUT} ${OUT}-v*
 
 
-bump: clean-venv  ## bump version in main branch
-ifeq ($(CURRENT_BRANCH), $(MAIN_BRANCH))
+git-status: ## require status is clean so we can use undo_edits to put things back
+	@status=$$(git status --porcelain); \
+	if [ ! -z "$${status}" ]; \
+	then \
+		echo "Error - working directory is dirty. Commit those changes!"; \
+		exit 1; \
+	fi
+
+shellcheck: ## use black to format python files
 	( \
-	   source .venv/bin/activate; \
-	   pip install bump2version; \
-	   bump2version $(part); \
-	)
-else
-	@echo "UNABLE TO BUMP - not on Main branch"
-	$(info Current Branch: $(CURRENT_BRANCH), main: $(MAIN_BRANCH))
-endif
+       git ls-files '*.sh' |  xargs shellcheck --format=gcc; \
+    )
 
-
-.PHONY: run build release static upload vet lint
+.PHONY: build release static upload vet lint fmt gocyclo goimports test
