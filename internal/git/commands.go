@@ -3,11 +3,12 @@ package git
 import (
 	"errors"
 	"fmt"
-	"github.com/natemarks/cache_clone/internal/utility"
-	"github.com/rs/zerolog"
 	"net/url"
 	"path"
 	"strings"
+
+	"github.com/natemarks/cache_clone/internal/utility"
+	"github.com/rs/zerolog"
 )
 
 // GetMirror creates a bare mirror from a remote repo, then creates the local working repo form the mirror

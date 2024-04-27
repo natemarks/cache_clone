@@ -1,7 +1,6 @@
 package old
 
 import (
-	"github.com/natemarks/cache_clone/cmd"
 	"github.com/natemarks/cache_clone/internal/aws"
 	"github.com/natemarks/cache_clone/internal/git"
 	"github.com/spf13/cobra"

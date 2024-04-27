@@ -1,13 +1,11 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"github.com/natemarks/cache_clone/config"
-	"github.com/natemarks/cache_clone/internal/aws"
-	"github.com/natemarks/cache_clone/internal/git"
+	"github.com/natemarks/cache_clone/types"
 	"github.com/spf13/cobra"
 )
 
@@ -20,18 +18,19 @@ var cloneCmd = &cobra.Command{
                      Clone using the local mirror`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log := config.GetLogger(settings)
-		// Get credentials from AWS Secret Manager
-		creds, err := aws.GetRemoteCredentials(aws.GetRemoteCredentialsInput{
-			AWSSMSecretID: settings.SecretID,
-			UsernameKey:   settings.UserKey,
-			TokenKey:      settings.TokenKey,
-		}, &log)
-		log.Info().Msg("Try to Clone Repo")
-		err = git.GetMirror(settings.Remote, settings.Mirror, settings.Local, creds.Username, creds.Token, &log)
-		if err != nil {
-			log.Fatal().Err(err)
+		log.Debug().Msg("Getting credentials from AWS Secret Manager")
+		creds := *types.NewCredential(settings, &log)
+		log.Debug().Msg("ensure the mirror is cloned")
+		m := types.NewMirror(settings, &log)
+		if m.IsCloned {
+			log.Debug().Msg("mirror is already cloned. updating")
+			m.UpdateClone(&log)
+		} else {
+			log.Debug().Msg("mirror doesn't exist. creating the mirror")
+			m.CreateClone(*types.NewHTTPSRemote(settings.Remote), creds, &log)
 		}
-		log.Info().Msg("Successfully cloned the repo")
+		log.Debug().Msgf("cloning the mirror to: %s", settings.Local)
+		m.MakeLocal(settings.Local, &log)
 	},
 }
 

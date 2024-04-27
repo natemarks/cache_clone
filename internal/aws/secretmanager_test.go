@@ -1,10 +1,11 @@
 package aws
 
 import (
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"os"
 	"testing"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // IsValid checks the GetRemoteCredentialsOutput and returns true if it looks ok

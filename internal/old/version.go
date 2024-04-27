@@ -2,7 +2,6 @@ package old
 
 import (
 	"fmt"
-	"github.com/natemarks/cache_clone/cmd"
 
 	ver "github.com/natemarks/cache_clone/version"
 	"github.com/spf13/cobra"

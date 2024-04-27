@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"os/exec"
 	"path"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 // DirExists return true if the directory exists

@@ -1,14 +1,15 @@
 package git
 
 import (
-	"github.com/natemarks/cache_clone/internal/aws"
-	"github.com/natemarks/cache_clone/internal/utility"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"io/ioutil"
 	"os"
 	"path"
 	"testing"
+
+	"github.com/natemarks/cache_clone/internal/aws"
+	"github.com/natemarks/cache_clone/internal/utility"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 func Test_getAndPushMirror(t *testing.T) {

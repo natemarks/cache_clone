@@ -1,13 +1,13 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
+	"os"
+
 	"github.com/natemarks/cache_clone/config"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var verbose bool
