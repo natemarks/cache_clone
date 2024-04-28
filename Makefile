@@ -41,7 +41,7 @@ release: git-status build
 	@for o in $(GOOS); do \
 	  for a in $(GOARCH); do \
 	    cp -R scripts ./build/$(COMMIT)/$${o}/$${a} ; \
-        tar -C ./build/$(COMMIT)/$${o}/$${a} -czvf release/$(COMMIT)/vpc_flow_logs_$(COMMIT)_$${o}_$${a}.tar.gz . ; \
+        tar -C ./build/$(COMMIT)/$${o}/$${a} -czvf release/$(COMMIT)/cache_clone_$(COMMIT)_$${o}_$${a}.tar.gz . ; \
 	  done \
     done ; \
 
@@ -73,7 +73,7 @@ gocyclo: # run cyclomatic complexity check
 
 godeadcode: # run cyclomatic complexity check
 	go install golang.org/x/tools/cmd/deadcode@latest
-	deadcode -test github.com/natemarks/vpc_flow_logs/...
+	deadcode -test github.com/natemarks/cache_clone/...
 
 govulncheck: # run cyclomatic complexity check
 	go install golang.org/x/vuln/cmd/govulncheck@latest

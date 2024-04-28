@@ -1,12 +1,10 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
+	"strings"
+
 	"github.com/natemarks/cache_clone/config"
 	"github.com/natemarks/cache_clone/types"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -14,20 +12,18 @@ import (
 // pushCmd represents the push command
 var pushCmd = &cobra.Command{
 	Use:   "push",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Push build repo changes through the local mirror to remote",
+	Long: `Access the stash credentials from AWS Secret Manager. 
+                     Push the build repo changes to the local mirror.
+                     Push the local mirror to the remote`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log := config.GetLogger(settings)
-		log.Debug().Msg("Getting credentials from AWS Secret Manager")
+		//TODO: remove the next three lines. I don't think we need cred for push
+		//log.Debug().Msg("Getting credentials from AWS Secret Manager")
 		//r := types.NewHTTPSRemote(settings.Remote)
 		//creds := *types.NewCredential(settings, &log)
 		mirror := *types.NewMirror(settings, &log)
-		log.Info().Msgf("Checking status of local repo: %s", settings.Local)
+		log.Debug().Msgf("Checking status of local repo: %s", settings.Local)
 		result, err := config.Run([]string{"git", "-C", settings.Local, "status", "--short"})
 		if err != nil || result.ReturnCode != 0 || result.StdOut != "" {
 			log.Error().Msgf("Unable to push dirty repo: %s", settings.Local)

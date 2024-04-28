@@ -1,6 +1,4 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
+// Package cmd is the command line interface for the cache_clone application
 package cmd
 
 import (
@@ -46,7 +44,7 @@ func init() {
 	// when this action is called directly.
 	rootCmd.PersistentFlags().BoolVarP(&settings.Verbose, "verbose", "v", false, "enable verbose/debug logging")
 
-	rootCmd.PersistentFlags().StringVarP(&settings.Mirror, "mirror", "m", "", "Location for all mirror repos")
+	rootCmd.PersistentFlags().StringVarP(&settings.Mirror, "mirror", "m", "", "Root location for all mirror repos")
 	rootCmd.MarkFlagRequired("mirror")
 
 	rootCmd.PersistentFlags().StringVarP(&settings.Local, "local", "l", "", "Location to create the repo clone")

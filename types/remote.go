@@ -1,5 +1,6 @@
 package types
 
+// TODO: simplify remote functions by getting rid of the struct and just using the functions
 import (
 	"fmt"
 	"net/url"
@@ -10,10 +11,6 @@ type HTTPSRemote struct {
 	Host string // https://my.git.host/my/git/repo.git -> my.git.host
 	Path string // https://my.git.host/my/git/repo.git -> my/git/repo.git
 	URL  *url.URL
-}
-
-func (r HTTPSRemote) String() string {
-	return "HTTPSRemote{Host: " + r.Host + ", Path: " + r.Path + "}"
 }
 
 // ConnectionString returns the connection string for the remote

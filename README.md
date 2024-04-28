@@ -1,5 +1,7 @@
 # Usage
 
+ NOTE: cache_clone ONLY worjks with git HTTPS connections. It does not work with SSH connections
+
 Every time an agent needs to clone a git repo from a remote service it takes time. If the agent had a local mirror of the repo, it would take much less time.  cache_clone addresses this problem with two subcommands: clone and push 
 
 As an added convenience (and to avoid passing credentials around in shells/shell scripts), cache_clone also accesses AWS secret manager to get the http credentials used to access the remote git server

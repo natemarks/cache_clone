@@ -12,6 +12,7 @@ import (
 )
 
 // Credential is a struct that represents a credential
+// store the sha256sums for logging/debugging purposes
 type Credential struct {
 	//The sha256sum of the AWS SM secret json document
 	SecretSha256sum string
@@ -25,6 +26,7 @@ type Credential struct {
 	TokenSha256sum string
 }
 
+// NewCredential creates a new Credential struct
 func NewCredential(s config.Settings, log *zerolog.Logger) *Credential {
 
 	// Set up the client

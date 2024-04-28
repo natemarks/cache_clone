@@ -2,20 +2,20 @@ package types
 
 import (
 	"path"
-	"strconv"
 
 	"github.com/natemarks/cache_clone/config"
 	"github.com/rs/zerolog"
 )
 
+// TODO: simplify mirriring by gettting rid of the struct and just using the functions
+
+// Mirror is a struct that represents a git mirror
+// mirrors should never be pulled or cloned more than once
+// but tracking it makes it safe to run those functions multiple times
 type Mirror struct {
 	IsCloned bool
 	IsPulled bool
 	Path     string
-}
-
-func (m Mirror) String() string {
-	return "Mirror{IsCloned: " + strconv.FormatBool(m.IsCloned) + ", IsPulled: " + strconv.FormatBool(m.IsPulled) + ", Path: " + m.Path + "}"
 }
 
 // CheckClone returns true if the mirror is cloned
@@ -55,13 +55,19 @@ func (m Mirror) CreateClone(r HTTPSRemote, c Credential, log *zerolog.Logger) {
 
 // UpdateClone updates the mirror with the latest changes
 func (m Mirror) UpdateClone(log *zerolog.Logger) {
+	if m.IsPulled {
+		log.Debug().Msgf("mirror is already pulled: %s", m.Path)
+		return
+	}
 	log.Debug().Msgf("mirror exists at : %s. Pulling latest", m.Path)
 	result, err := config.Run([]string{"git", "-C", m.Path, "fetch", "--all"})
 	if err != nil {
 		log.Fatal().Err(err).Msg(result.String())
 	}
+	m.IsPulled = true
 }
 
+// MakeLocal creates a local clone from the mirror
 func (m Mirror) MakeLocal(l string, log *zerolog.Logger) {
 	localParent := path.Dir(l)
 	log.Debug().Msgf("Ensuring local parent path: %s", localParent)

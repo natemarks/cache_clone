@@ -1,11 +1,13 @@
 package types
 
 import (
-	"github.com/natemarks/cache_clone/config"
 	"path/filepath"
 	"testing"
+
+	"github.com/natemarks/cache_clone/config"
 )
 
+// TestClone tests the clone function
 func TestClone(t *testing.T) {
 	// minimal settings
 	s := config.Settings{

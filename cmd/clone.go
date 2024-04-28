@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -23,7 +20,7 @@ var cloneCmd = &cobra.Command{
 		log.Debug().Msg("ensure the mirror is cloned")
 		m := types.NewMirror(settings, &log)
 		if m.IsCloned {
-			log.Debug().Msg("mirror is already cloned. updating")
+			log.Debug().Msg("mirror is already cloned. updating the mirror")
 			m.UpdateClone(&log)
 		} else {
 			log.Debug().Msg("mirror doesn't exist. creating the mirror")
