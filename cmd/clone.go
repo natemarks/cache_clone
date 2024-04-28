@@ -19,7 +19,7 @@ var cloneCmd = &cobra.Command{
 		creds := *types.NewCredential(settings, &log)
 		log.Debug().Msg("ensure the mirror is cloned")
 		m := types.NewMirror(settings, &log)
-		if m.IsCloned {
+		if m.CheckClone(&log) {
 			log.Debug().Msg("mirror is already cloned. updating the mirror")
 			m.UpdateClone(&log)
 		} else {
