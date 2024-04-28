@@ -1,7 +1,6 @@
 package types
 
 import (
-	"github.com/natemarks/cache_clone/internal/utility"
 	"path"
 	"strconv"
 
@@ -27,7 +26,7 @@ func (m Mirror) CheckClone(log *zerolog.Logger) bool {
 		log.Debug().Msgf("already confirmed the mirror is cloned: %s", m.Path)
 		return true
 	}
-	result, _ := utility.Run([]string{"git", "-C", m.Path, "rev-parse", "--is-bare-repository"})
+	result, _ := config.Run([]string{"git", "-C", m.Path, "rev-parse", "--is-bare-repository"})
 	if result.ReturnCode != 0 || result.StdOut != "true\n" {
 		log.Debug().Msgf("mirror is not cloned: %s", result.String())
 		m.IsCloned = false
@@ -42,12 +41,12 @@ func (m Mirror) CheckClone(log *zerolog.Logger) bool {
 func (m Mirror) CreateClone(r HTTPSRemote, c Credential, log *zerolog.Logger) {
 	mirrorParent := path.Dir(m.Path)
 
-	result, err := utility.Run([]string{"mkdir", "-p", mirrorParent})
+	result, err := config.Run([]string{"mkdir", "-p", mirrorParent})
 	if err != nil || result.ReturnCode != 0 {
 		log.Fatal().Err(err).Msg(result.String())
 	}
 	log.Debug().Msgf("cloning mirror to : %s", m.Path)
-	result, err = utility.Run([]string{"git", "-C", mirrorParent, "clone", "--mirror", r.ConnectionString(c)})
+	result, err = config.Run([]string{"git", "-C", mirrorParent, "clone", "--mirror", r.ConnectionString(c)})
 	if err != nil {
 		log.Fatal().Err(err).Msg(result.String())
 	}
@@ -57,7 +56,7 @@ func (m Mirror) CreateClone(r HTTPSRemote, c Credential, log *zerolog.Logger) {
 // UpdateClone updates the mirror with the latest changes
 func (m Mirror) UpdateClone(log *zerolog.Logger) {
 	log.Debug().Msgf("mirror exists at : %s. Pulling latest", m.Path)
-	result, err := utility.Run([]string{"git", "-C", m.Path, "fetch", "--all"})
+	result, err := config.Run([]string{"git", "-C", m.Path, "fetch", "--all"})
 	if err != nil {
 		log.Fatal().Err(err).Msg(result.String())
 	}
@@ -66,12 +65,12 @@ func (m Mirror) UpdateClone(log *zerolog.Logger) {
 func (m Mirror) MakeLocal(l string, log *zerolog.Logger) {
 	localParent := path.Dir(l)
 	log.Debug().Msgf("Ensuring local parent path: %s", localParent)
-	result, err := utility.Run([]string{"mkdir", "-p", localParent})
+	result, err := config.Run([]string{"mkdir", "-p", localParent})
 	if err != nil || result.ReturnCode != 0 {
 		log.Fatal().Err(err).Msg(result.String())
 	}
 	log.Debug().Msgf("Creating local clone(%s) from mirror(%s)", l, m.Path)
-	result, err = utility.Run([]string{"git", "clone", m.Path, l})
+	result, err = config.Run([]string{"git", "clone", m.Path, l})
 	if err != nil {
 		log.Fatal().Err(err).Msg(result.String())
 	}

@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"github.com/natemarks/cache_clone/config"
-	"github.com/natemarks/cache_clone/internal/utility"
 	"github.com/natemarks/cache_clone/types"
 	"strings"
 
@@ -29,7 +28,7 @@ to quickly create a Cobra application.`,
 		//creds := *types.NewCredential(settings, &log)
 		mirror := *types.NewMirror(settings, &log)
 		log.Info().Msgf("Checking status of local repo: %s", settings.Local)
-		result, err := utility.Run([]string{"git", "-C", settings.Local, "status", "--short"})
+		result, err := config.Run([]string{"git", "-C", settings.Local, "status", "--short"})
 		if err != nil || result.ReturnCode != 0 || result.StdOut != "" {
 			log.Error().Msgf("Unable to push dirty repo: %s", settings.Local)
 			log.Fatal().Err(err).Msg(result.String())
@@ -37,13 +36,13 @@ to quickly create a Cobra application.`,
 
 		// Get the current branch name so we can push it
 		log.Debug().Msgf("Get current branch of local repo: %s", settings.Local)
-		result, _ = utility.Run([]string{"git", "-C", settings.Local, "branch", "--show-current"})
+		result, _ = config.Run([]string{"git", "-C", settings.Local, "branch", "--show-current"})
 		branch := strings.TrimSuffix(result.StdOut, "\n")
 		log.Info().Msgf("Got current branch of local repo (%s): %s", settings.Local, branch)
 
 		//Push the current local branch to the mirror
 		log.Debug().Msgf("Pushing local repo(%s) to mirror(%s)", settings.Local, mirror.Path)
-		result, err = utility.Run([]string{"git", "-C", settings.Local, "push", "--set-upstream", "origin", branch})
+		result, err = config.Run([]string{"git", "-C", settings.Local, "push", "--set-upstream", "origin", branch})
 		if err != nil || result.ReturnCode != 0 || result.StdOut != "" {
 			log.Error().Msgf("Unable to push local repo (%s) to mirror (%s)", settings.Local, mirror.Path)
 			log.Fatal().Err(err).Msg(result.String())
@@ -51,7 +50,7 @@ to quickly create a Cobra application.`,
 
 		// Push the mirror to the remote
 		log.Debug().Msgf("Pushing mirror(%s) to remote(%s)", mirror.Path, settings.Remote)
-		result, _ = utility.Run([]string{"git", "-C", mirror.Path, "push"})
+		result, _ = config.Run([]string{"git", "-C", mirror.Path, "push"})
 		if err != nil || result.ReturnCode != 0 || result.StdOut != "" {
 			log.Error().Msgf("Unable to push mirror (%s) to remote (%s)", mirror.Path, settings.Remote)
 			log.Fatal().Err(err).Msg(result.String())
